@@ -338,7 +338,7 @@ def expand_q(q_compact, df_raw):
         else:   
             q['all'][k] = get_default_column_settings_all(k)
             
-    print(q['use_raw_cols_list'])        
+    print(q['use_raw_cols_list'])
             
     use_labels_list = [q['all'][k]['label'] for k in q['use_raw_cols_list']]     
     use_labels_dict = {k: q['all'][k]['label'] for k in q['use_raw_cols_list']}    
@@ -1127,6 +1127,34 @@ def main_func(df, q,
     ''')
 
     dark_mode.js_on_click(callback_dark)
+
+    # buttom to invert x and y axis
+    invert_x = bk.CheckboxGroup(labels=['invert X-axis'], active=[], name='invert X-axis')
+    invert_y = bk.CheckboxGroup(labels=['invert Y-axis'], active=[], name='invert Y-axis')
+    callback_invert = bk.CustomJS(args=dict(p=p),
+        code='''
+
+        console.log('cb_obj.value = ', cb_obj.active)
+
+        if (cb_obj.name == 'invert X-axis') {
+            var temp = p.x_range.start
+            p.x_range.start = p.x_range.end
+            p.x_range.end = temp
+        } 
+
+        if (cb_obj.name == 'invert Y-axis') {
+            var temp = p.y_range.start
+            p.y_range.start = p.y_range.end
+            p.y_range.end = temp
+        }
+
+        p.change.emit()
+
+
+    ''')
+
+    invert_x.js_on_click(callback_invert)
+    invert_y.js_on_click(callback_invert)
 
     slider = bk.Slider(start=0, end=1, step=0.01, value=alpha, title='opacity', width=100)
     
@@ -2233,6 +2261,8 @@ def main_func(df, q,
              bk.Spacer(height=100), 
              description, 
              dark_mode, 
+             invert_x,
+             invert_y,
              slider,
              log_x,
              log_y,

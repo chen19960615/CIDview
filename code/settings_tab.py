@@ -891,8 +891,9 @@ def w_ini_xy_text(q, q_mod):
     
     q_labels = q_labels_func(q)
     
-    title_x = get_title('x')   
-        
+    title_x = get_title('x')
+    # print(q)
+    print(q['ini_xy_text'][:1], q_labels)
     active_x = idx_func(q['ini_xy_text'][:1], q_labels)[0]
     
     radio_button_group_x = bk.RadioButtonGroup(labels=q_labels, 
